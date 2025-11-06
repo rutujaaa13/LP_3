@@ -1,0 +1,56 @@
+import java.util.*;
+
+class Item {
+    int weight;
+    int value;
+
+    Item(int weight, int value) {
+        this.weight = weight;
+        this.value = value;
+    }
+}
+
+public class Knapsack_greedy {
+    static double fractionalKnapsack(Item[] items, int capacity) {
+        // Sort items by value/weight ratio in descending order
+        Arrays.sort(items, (a, b) -> Double.compare((double) b.value / b.weight, (double) a.value / a.weight));
+
+        double totalValue = 0.0;
+        int remainingCapacity = capacity;
+
+        System.out.println("Selected Items:");
+
+        for (Item item : items) {
+            if (remainingCapacity == 0)
+                break;
+
+            if (item.weight <= remainingCapacity) {
+                // Take full item
+                totalValue += item.value;
+                remainingCapacity -= item.weight;
+                System.out.println("Item weight " + item.weight + ", value " + item.value + ", fraction taken: 1.0");
+            } else {
+                // Take fractional part
+                double fraction = (double) remainingCapacity / item.weight;
+                totalValue += item.value * fraction;
+                System.out.println("Item weight " + item.weight + ", value " + item.value + ", fraction taken: " + fraction);
+                remainingCapacity = 0;
+            }
+        }
+
+        return totalValue;
+    }
+
+    public static void main(String[] args) {
+        Item[] items = {
+                new Item(10, 60),
+                new Item(20, 100),
+                new Item(30, 120)
+        };
+
+        int maxCapacity = 50;
+        double maxValue = fractionalKnapsack(items, maxCapacity);
+
+        System.out.println("\nMaximum value achievable: " + maxValue);
+    }
+}
